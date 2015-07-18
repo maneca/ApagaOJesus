@@ -45,6 +45,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="joao.apagaojesus.MainActivity" />
         </activity>
+        <activity
+            android:name=".GameOverActivity"
+            android:label="@string/title_activity_game_over" >
+        </activity>
     </application>
 
 </manifest>
