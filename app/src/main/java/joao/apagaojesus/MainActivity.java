@@ -1,6 +1,8 @@
 package joao.apagaojesus;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -43,7 +45,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
             case R.id.button_highscore: intent = new Intent(MainActivity.this, HighscoreActivity.class);
                                         startActivity(intent);
-                                        finish();
+                                        //finish();
 
                                         break;
 
@@ -53,5 +55,34 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
                                         break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        //Display alert message when back button has been pressed
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+        alertDialog.setTitle("Sair da aplicação");
+        alertDialog.setMessage("Deseja sair da aplicação?");
+
+        alertDialog.setPositiveButton("Sim",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        finish();
+                    }
+                });
+
+        alertDialog.setNegativeButton("Não",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Write your code here to invoke NO event
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+
+        return;
     }
 }
