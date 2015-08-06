@@ -8,13 +8,21 @@
     tools:context="joao.apagaojesus.GameActivity">
 
     <ImageView
-        android:id="@+id/image_to_erase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/background"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="300dp"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@drawable/benfica" />
+
+
+    <ImageView
+        android:id="@+id/image_to_erase"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,13 +34,5 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <ImageView
-        android:id="@+id/rubber"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="124dp"
-        android:src="@drawable/rubber" />
 
 </RelativeLayout>

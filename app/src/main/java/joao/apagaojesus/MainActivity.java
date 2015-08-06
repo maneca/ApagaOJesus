@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -62,10 +59,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
         //Display alert message when back button has been pressed
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
-        alertDialog.setTitle("Sair da aplicação");
-        alertDialog.setMessage("Deseja sair da aplicação?");
+        alertDialog.setTitle(getResources().getString(R.string.sair_da_aplicacao));
+        alertDialog.setMessage(getResources().getString(R.string.ask_sair_da_aplicacao));
 
-        alertDialog.setPositiveButton("Sim",
+        alertDialog.setPositiveButton(getResources().getString(R.string.sim),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -73,7 +70,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     }
                 });
 
-        alertDialog.setNegativeButton("Não",
+        alertDialog.setNegativeButton(getResources().getString(R.string.nao),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Write your code here to invoke NO event

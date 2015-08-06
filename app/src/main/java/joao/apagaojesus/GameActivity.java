@@ -1,10 +1,13 @@
 package joao.apagaojesus;
 
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -12,16 +15,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class GameActivity extends Activity implements View.OnTouchListener{
+public class GameActivity extends Activity {
 
-    private ImageView rubber, to_erase;
+    private ImageView to_erase;
     private ViewGroup mRrootLayout;
-    private int _xDelta;
-    private int _yDelta;
-
+    private Rect imageRect;
+    private long mAnimationTime;
+    private ObjectAnimator anim;
+    private Boolean terminou=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +32,39 @@ public class GameActivity extends Activity implements View.OnTouchListener{
         setContentView(R.layout.activity_game);
 
         mRrootLayout = (ViewGroup) findViewById(R.id.rootView);
-        rubber = (ImageView) mRrootLayout.findViewById(R.id.rubber);
         to_erase = (ImageView) mRrootLayout.findViewById(R.id.image_to_erase);
         final TextView textview = (TextView) mRrootLayout.findViewById(R.id.textView);
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
-        rubber.setLayoutParams(layoutParams);
-        rubber.setOnTouchListener(this);
+        //animation = AnimationUtils.loadAnimation(this, R.anim.animation);
+        //animation.setAnimationListener(this);
 
+        anim = ObjectAnimator.ofFloat(to_erase, "alpha", 1, 0);
+        anim.setDuration(5000);
+        anim.setRepeatCount(0);
+        anim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                    terminou = false;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                Log.d("Acabou", "acabou");
+                to_erase.setVisibility(View.GONE);
+                terminou = true;
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
 
 
         new CountDownTimer(30000, 1000) {
@@ -56,19 +84,17 @@ public class GameActivity extends Activity implements View.OnTouchListener{
 
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event) {
 
         final int X = (int) event.getRawX();
         final int Y = (int) event.getRawY();
 
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+        /*switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
             case MotionEvent.ACTION_DOWN:   RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
                                             _xDelta = X - lParams.leftMargin;
                                             _yDelta = Y - lParams.topMargin;
 
-                                            Log.d("eraser_initial", rubber.getX() + " " + rubber.getY());
-                                            Log.d("to_erase_initial", to_erase.getX() + " " + to_erase.getY());
                                             break;
 
             case MotionEvent.ACTION_UP:             break;
@@ -84,29 +110,49 @@ public class GameActivity extends Activity implements View.OnTouchListener{
                                             layoutParams.bottomMargin = -250;
                                             v.setLayoutParams(layoutParams);
 
-                                            RelativeLayout.LayoutParams lP = (RelativeLayout.LayoutParams) to_erase.getLayoutParams();
-
-                                            Log.d("eraser", rubber.getX() + " " + (rubber.getX() + rubber.getWidth()) + " " + rubber.getY() + " " + (rubber.getY()+rubber.getHeight()));
-                                            Log.d("to_erase", to_erase.getX() + " " + (to_erase.getX() + to_erase.getWidth()) + " " + to_erase.getY() + " " + (to_erase.getY()+to_erase.getHeight()));
-
-                                            float to_erase_x1 = to_erase.getX(), to_erase_x2 = (to_erase.getX() + to_erase.getWidth());
-                                            float to_erase_y1 = to_erase.getY(), to_erase_y2 = (to_erase.getY()+to_erase.getHeight());
-                                            float rubber_x1 = rubber.getX(), rubber_x2 = (rubber.getX() + rubber.getWidth());
-                                            float rubber_y1 = to_erase.getY(), rubber_y2 = (to_erase.getY()+to_erase.getHeight());
-
-                                            if(((rubber_x1 > to_erase_x1 && rubber_x1 < to_erase_x2)
-                                                    && (rubber_y1 > to_erase_y1 && rubber_y1 < to_erase_y2))
-                                                    || ((rubber_x2 > to_erase_x1 && rubber_x2 < to_erase_x2) &&
-                                                             (rubber_y2 > to_erase_y1 && rubber_y2 < to_erase_y2)))
-                                                Log.d("overlapped", "overlapped");
-
-
                                             break;
         }
 
-        mRrootLayout.invalidate();
+        mRrootLayout.invalidate();*/
+        super.onTouchEvent(event);
+        if (imageRect == null) {
+            imageRect = new Rect();
+            to_erase.getGlobalVisibleRect(imageRect);
+        }
+        int x = (int) event.getX();
+        int y = (int) event.getY();
 
+        if(!terminou) {
+            if (imageRect.contains(x, y)) {
+                Log.d("tempo", (mAnimationTime * 1000) + " seg");
+
+                if (!anim.isRunning())
+                    startAnimation();
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                stopAnimation();
+                Log.d("tempo", (mAnimationTime * 1000) + " seg");
+            } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                Log.d("tempo", (mAnimationTime * 1000) + " seg");
+                if (!anim.isRunning())
+                    startAnimation();
+            } else {
+                stopAnimation();
+                Log.d("tempo", (mAnimationTime * 1000) + " seg");
+            }
+        }
         return true;
+    }
+
+    private void stopAnimation(){
+
+        mAnimationTime = anim.getCurrentPlayTime();
+        anim.cancel();
+    }
+
+    private void startAnimation(){
+
+        anim.start();
+        anim.setCurrentPlayTime(mAnimationTime);
     }
 
     @Override
@@ -114,10 +160,10 @@ public class GameActivity extends Activity implements View.OnTouchListener{
         //Display alert message when back button has been pressed
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
-        alertDialog.setTitle("Sair do jogo");
-        alertDialog.setMessage("Deseja sair do jogo?");
+        alertDialog.setTitle(getResources().getString(R.string.sair_do_jogo));
+        alertDialog.setMessage(getResources().getString(R.string.ask_sair_do_jogo));
 
-        alertDialog.setPositiveButton("Sim",
+        alertDialog.setPositiveButton(getResources().getString(R.string.sim),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(GameActivity.this, MainActivity.class);
@@ -127,7 +173,7 @@ public class GameActivity extends Activity implements View.OnTouchListener{
                     }
                 });
 
-        alertDialog.setNegativeButton("Não",
+        alertDialog.setNegativeButton(getResources().getString(R.string.nao),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Write your code here to invoke NO event
@@ -137,6 +183,7 @@ public class GameActivity extends Activity implements View.OnTouchListener{
 
         alertDialog.show();
     }
+
 
 
 }
