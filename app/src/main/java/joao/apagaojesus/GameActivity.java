@@ -43,7 +43,7 @@ public class GameActivity extends Activity {
         //animation.setAnimationListener(this);
 
         anim = ObjectAnimator.ofFloat(to_erase, "alpha", 1, 0);
-        anim.setDuration(10000);
+        anim.setDuration(20000);
         anim.setRepeatCount(0);
         anim.addListener(new Animator.AnimatorListener() {
             @Override

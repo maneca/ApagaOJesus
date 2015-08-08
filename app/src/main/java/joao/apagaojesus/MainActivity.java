@@ -42,13 +42,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.button_highscore: intent = new Intent(MainActivity.this, HighscoreActivity.class);
                                         startActivity(intent);
-                                        //finish();
 
                                         break;
 
             case R.id.button_creditos:  intent = new Intent(MainActivity.this, CreditsActivity.class);
                                         startActivity(intent);
-                                        finish();
 
                                         break;
         }

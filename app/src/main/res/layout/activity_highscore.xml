@@ -8,11 +8,10 @@
     tools:context="joao.apagaojesus.HighscoreActivity">
 
 
-    <ImageView
+    <joao.apagaojesus.RoundedImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:id="@+id/imageView"
-        android:src="@drawable/highscore"
         android:layout_marginTop="46dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
