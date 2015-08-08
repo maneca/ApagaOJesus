@@ -1,17 +1,17 @@
 package joao.apagaojesus;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 public class GameOverActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button retry, mainScreen;
+    private TextView total_points;
     private Intent intent;
 
     @Override
@@ -19,8 +19,14 @@ public class GameOverActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_over);
 
+        total_points = (TextView) findViewById(R.id.total_points);
         retry = (Button) findViewById(R.id.button_retry);
         mainScreen = (Button) findViewById(R.id.button_main_screen);
+
+        Bundle extras = (Bundle) getIntent().getExtras();
+        int points = (int) extras.get("points");
+
+        total_points.setText(points+" pontos");
 
         retry.setOnClickListener(this);
         mainScreen.setOnClickListener(this);
