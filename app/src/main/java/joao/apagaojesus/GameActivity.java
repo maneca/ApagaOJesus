@@ -27,6 +27,9 @@ public class GameActivity extends Activity {
     private ObjectAnimator anim;
     private Boolean terminou=false;
     private int totalPoints = 0;
+    private CountDownTimer timer;
+    private int next_image = 0;
+    private static int[] img = {R.drawable.benfica_segunda, R.drawable.benfica_terceira, R.drawable.benfica_quarta, R.drawable.benfica_quinta};
     public static final String PREFS_NAME = "MyPrefsFile";
 
     @Override
@@ -55,8 +58,18 @@ public class GameActivity extends Activity {
             public void onAnimationEnd(Animator animation) {
                 Log.d("Acabou", "acabou");
                 to_erase.setVisibility(View.GONE);
-                background.setImageResource(R.drawable.benfica_segunda);
-                terminou = true;
+                background.setImageResource(img[next_image]);
+
+                if(next_image<4) {
+                    next_image++;
+
+                    to_erase.setX(300);
+                    to_erase.setY(300);
+                    to_erase.setVisibility(View.VISIBLE);
+                }else{
+                    terminou = true;
+                }
+
                 totalPoints += (int) anim.getDuration()/100;
 
             }
@@ -73,7 +86,7 @@ public class GameActivity extends Activity {
         });
 
 
-        new CountDownTimer(30000, 1000) {
+        timer = new CountDownTimer(30000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 textview.setText("seconds remaining: " + millisUntilFinished / 1000);
@@ -135,6 +148,7 @@ public class GameActivity extends Activity {
 
         mRrootLayout.invalidate();*/
         super.onTouchEvent(event);
+
         if (imageRect == null) {
             imageRect = new Rect();
             to_erase.getGlobalVisibleRect(imageRect);
@@ -154,7 +168,7 @@ public class GameActivity extends Activity {
             } else if (event.getAction() == MotionEvent.ACTION_DOWN && imageRect.contains(x, y)) {
                 Log.d("tempo2", (mAnimationTime * 1000) + " seg");
                 if (!anim.isRunning())
-                startAnimation();
+                    startAnimation();
             } else {
                 stopAnimation();
                 Log.d("tempo3", (mAnimationTime * 1000) + " seg");
@@ -186,6 +200,7 @@ public class GameActivity extends Activity {
         alertDialog.setPositiveButton(getResources().getString(R.string.sim),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        timer.cancel();
                         Intent intent = new Intent(GameActivity.this, MainActivity.class);
                         startActivity(intent);
 
