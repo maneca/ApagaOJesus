@@ -16,13 +16,16 @@
         android:src="@drawable/benfica" />
 
 
-    <ImageView
+    <com.winsontan520.WScratchView
+        xmlns:wsv="http://schemas.android.com/apk/res-auto"
         android:id="@+id/image_to_erase"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:src="@mipmap/ic_launcher"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_width="80dp"
+        android:layout_height="120dp"
+        android:layout_centerInParent="true"
+        wsv:antiAlias="true"
+        wsv:overlayColor="#0000ff"
+        wsv:revealSize="20dp"
+        wsv:scratchable="true" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -35,7 +38,20 @@
         android:textStyle="bold"
         android:layout_centerHorizontal="true"
         android:id="@+id/textView"
+        />
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="#ffffff"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Tempo em falta"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/percentage"
         />
 
 

@@ -1,34 +1,29 @@
 package joao.apagaojesus;
 
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.winsontan520.WScratchView;
+
 public class GameActivity extends Activity {
 
-    private ImageView to_erase, background;
+    private ImageView background;
     private ViewGroup mRrootLayout;
-    private Rect imageRect;
-    private long mAnimationTime;
-    private ObjectAnimator anim;
-    private Boolean terminou=false;
+    private float mPercentage;
     private int totalPoints = 0;
+    private long secondsMissing = 0;
     private CountDownTimer timer;
     private int next_image = 0;
+    private TextView percentageText;
     private static int[] img = {R.drawable.benfica_segunda, R.drawable.benfica_terceira, R.drawable.benfica_quarta, R.drawable.benfica_quinta};
     public static final String PREFS_NAME = "MyPrefsFile";
 
@@ -38,58 +33,78 @@ public class GameActivity extends Activity {
         setContentView(R.layout.activity_game);
 
         mRrootLayout = (ViewGroup) findViewById(R.id.rootView);
-        to_erase = (ImageView) mRrootLayout.findViewById(R.id.image_to_erase);
+        final WScratchView to_erase = (WScratchView) mRrootLayout.findViewById(R.id.image_to_erase);
         background = (ImageView) mRrootLayout.findViewById(R.id.background);
         final TextView textview = (TextView) mRrootLayout.findViewById(R.id.textView);
+        percentageText = (TextView) mRrootLayout.findViewById(R.id.percentage);
 
-        //animation = AnimationUtils.loadAnimation(this, R.anim.animation);
-        //animation.setAnimationListener(this);
+        // set drawable to scratchview
+        to_erase.setScratchDrawable(getResources().getDrawable(R.drawable.ic_launcher));
 
-        anim = ObjectAnimator.ofFloat(to_erase, "alpha", 1, 0);
-        anim.setDuration(20000);
-        anim.setRepeatCount(0);
-        anim.addListener(new Animator.AnimatorListener() {
+        // add callback for update scratch percentage
+        to_erase.setOnScratchCallback(new WScratchView.OnScratchCallback() {
+
             @Override
-            public void onAnimationStart(Animator animation) {
-                    terminou = false;
+            public void onScratch(float percentage) {
+                updatePercentage(percentage);
             }
 
             @Override
-            public void onAnimationEnd(Animator animation) {
-                Log.d("Acabou", "acabou");
-                to_erase.setVisibility(View.GONE);
-                background.setImageResource(img[next_image]);
-
-                if(next_image<4) {
-                    next_image++;
-
-                    to_erase.setX(300);
-                    to_erase.setY(300);
-                    to_erase.setVisibility(View.VISIBLE);
-                }else{
-                    terminou = true;
+            public void onDetach(boolean fingerDetach) {
+                if (mPercentage > 50) {
+                    to_erase.setScratchAll(true);
+                    updatePercentage(100);
                 }
 
-                totalPoints += (int) anim.getDuration()/100;
+                if(mPercentage > 90){
+                    if(next_image!=4){
+                        background.setImageResource(img[next_image]);
+                        next_image++;
 
-            }
+                        totalPoints += 200;
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                        to_erase.resetView();
+                        ViewGroup.LayoutParams params = to_erase.getLayoutParams();
+                        params.height += 30;
+                        params.width += 30;
 
-            }
+                        to_erase.setScratchAll(false); // todo: should include to resetView?
+                        updatePercentage(0f);
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                    }else{
+                        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, 0);
+                        int highscore = sharedPreferences.getInt("highscore", 0);
 
+                        totalPoints += secondsMissing*10;
+
+                        if(highscore < totalPoints){
+
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putInt("highscore", totalPoints);
+                            editor.commit();
+                        }
+
+
+                        Intent intent = new Intent(GameActivity.this, GameOverActivity.class);
+                        timer.cancel();
+                        intent.putExtra("points", totalPoints);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                }
             }
         });
 
+        updatePercentage(0f);
 
+
+        // TIMER
         timer = new CountDownTimer(30000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 textview.setText("seconds remaining: " + millisUntilFinished / 1000);
+                secondsMissing = millisUntilFinished / 1000;
             }
 
             public void onFinish() {
@@ -115,79 +130,12 @@ public class GameActivity extends Activity {
         }.start();
     }
 
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        final int X = (int) event.getRawX();
-        final int Y = (int) event.getRawY();
-
-        /*switch (event.getAction() & MotionEvent.ACTION_MASK) {
-
-            case MotionEvent.ACTION_DOWN:   RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
-                                            _xDelta = X - lParams.leftMargin;
-                                            _yDelta = Y - lParams.topMargin;
-
-                                            break;
-
-            case MotionEvent.ACTION_UP:             break;
-
-            case MotionEvent.ACTION_POINTER_DOWN:   break;
-
-            case MotionEvent.ACTION_POINTER_UP:     break;
-
-            case MotionEvent.ACTION_MOVE:   RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
-                                            layoutParams.leftMargin = X - _xDelta;
-                                            layoutParams.topMargin = Y - _yDelta;
-                                            layoutParams.rightMargin = -250;
-                                            layoutParams.bottomMargin = -250;
-                                            v.setLayoutParams(layoutParams);
-
-                                            break;
-        }
-
-        mRrootLayout.invalidate();*/
-        super.onTouchEvent(event);
-
-        if (imageRect == null) {
-            imageRect = new Rect();
-            to_erase.getGlobalVisibleRect(imageRect);
-        }
-        int x = (int) event.getX();
-        int y = (int) event.getY();
-
-        if(!terminou) {
-            if (imageRect.contains(x, y)) {
-                Log.d("tempo0", (mAnimationTime * 1000) + " seg");
-
-                if (!anim.isRunning())
-                    startAnimation();
-            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                stopAnimation();
-                Log.d("tempo1", (mAnimationTime * 1000) + " seg");
-            } else if (event.getAction() == MotionEvent.ACTION_DOWN && imageRect.contains(x, y)) {
-                Log.d("tempo2", (mAnimationTime * 1000) + " seg");
-                if (!anim.isRunning())
-                    startAnimation();
-            } else {
-                stopAnimation();
-                Log.d("tempo3", (mAnimationTime * 1000) + " seg");
-            }
-        }
-        return true;
+    protected void updatePercentage(float percentage) {
+        mPercentage = percentage;
+        String percentage2decimal = String.format("%.2f", percentage) + " %";
+        percentageText.setText("" + percentage2decimal);
     }
 
-    private void stopAnimation(){
-
-        mAnimationTime = anim.getCurrentPlayTime();
-        anim.cancel();
-    }
-
-    private void startAnimation(){
-
-        anim.start();
-        anim.setCurrentPlayTime(mAnimationTime);
-    }
 
     @Override
     public void onBackPressed() {
