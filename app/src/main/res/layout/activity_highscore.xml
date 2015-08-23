@@ -27,4 +27,19 @@
         android:layout_marginTop="65dp"
         android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="@drawable/button_state"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="@string/reset"
+        android:id="@+id/button_reset_highscore"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/highscore_textView"
+        android:layout_marginTop="20dp"/>
+
+
 </RelativeLayout>

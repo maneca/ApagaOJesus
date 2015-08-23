@@ -11,18 +11,15 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private Button new_game, highscore, credits;
-    private Intent intent;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new_game = (Button) findViewById(R.id.button_new_game);
-        highscore = (Button) findViewById(R.id.button_highscore);
-        credits = (Button) findViewById(R.id.button_creditos);
+        Button new_game = (Button) findViewById(R.id.button_new_game);
+        Button highscore = (Button) findViewById(R.id.button_highscore);
+        Button credits = (Button) findViewById(R.id.button_creditos);
 
         new_game.setOnClickListener(this);
         highscore.setOnClickListener(this);
@@ -32,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+
+        Intent intent;
 
         switch(v.getId()){
             case R.id.button_new_game:  intent = new Intent(MainActivity.this, GameActivity.class);
@@ -78,6 +77,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         alertDialog.show();
 
-        return;
     }
 }

@@ -46,7 +46,7 @@
     <Button
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:background="@drawable/buttonshape"
+        android:background="@drawable/button_state"
         android:textColor="#000000"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -59,7 +59,7 @@
     <Button
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:background="@drawable/buttonshape"
+        android:background="@drawable/button_state"
         android:textColor="#000000"
         android:textSize="20sp"
         android:textStyle="bold"

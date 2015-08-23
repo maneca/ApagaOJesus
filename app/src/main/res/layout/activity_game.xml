@@ -5,29 +5,36 @@
     android:background="#ff0000"
     tools:context="joao.apagaojesus.GameActivity">
 
-    <ImageView
-        android:id="@+id/background"
+
+    <RelativeLayout android:id="@+id/image_layout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/benfica" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/time_missing">
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/benfica" />
 
 
-    <com.winsontan520.WScratchView
-        xmlns:wsv="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/image_to_erase"
-        android:layout_width="80dp"
-        android:layout_height="120dp"
-        android:layout_centerInParent="true"
-        wsv:antiAlias="true"
-        wsv:overlayColor="#0000ff"
-        wsv:revealSize="20dp"
-        wsv:scratchable="true" />
+        <com.winsontan520.WScratchView
+            xmlns:wsv="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/image_to_erase"
+            android:layout_width="110dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            wsv:antiAlias="true"
+            wsv:overlayColor="#0000ff"
+            wsv:revealSize="20dp"
+            wsv:scratchable="true" />
+    </RelativeLayout>
 
-    <TextView
+    <TextView android:id="@+id/time_missing"
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:background="#ffffff"
@@ -36,11 +43,9 @@
         android:gravity="center"
         android:textColor="#000000"
         android:textStyle="bold"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/textView"
-        />
+        android:layout_centerHorizontal="true" />
 
-    <TextView
+    <!--<TextView
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:background="#ffffff"
@@ -52,7 +57,7 @@
         android:layout_marginTop="40dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/percentage"
-        />
+        />-->
 
 
 </RelativeLayout>
