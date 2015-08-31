@@ -27,11 +27,16 @@
             android:id="@+id/image_to_erase"
             android:layout_width="110dp"
             android:layout_height="200dp"
-            android:layout_centerInParent="true"
+            android:scaleType="fitXY"
             wsv:antiAlias="true"
             wsv:overlayColor="#0000ff"
             wsv:revealSize="20dp"
-            wsv:scratchable="true" />
+            wsv:scratchable="true"
+            android:layout_marginRight="178dp"
+            android:layout_marginEnd="178dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/background"
+            android:layout_alignEnd="@+id/background" />
     </RelativeLayout>
 
     <TextView android:id="@+id/time_missing"
@@ -44,20 +49,6 @@
         android:textColor="#000000"
         android:textStyle="bold"
         android:layout_centerHorizontal="true" />
-
-    <!--<TextView
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:background="#ffffff"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Tempo em falta"
-        android:gravity="center"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:layout_marginTop="40dp"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/percentage"
-        />-->
 
 
 </RelativeLayout>

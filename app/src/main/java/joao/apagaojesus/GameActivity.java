@@ -8,10 +8,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.winsontan520.WScratchView;
 
 public class GameActivity extends Activity {
@@ -24,6 +29,9 @@ public class GameActivity extends Activity {
     private int next_image = 0;
     private TextView textview, percentageText;
     private static int[] img = {R.drawable.background_1, R.drawable.background_2, R.drawable.background_3, R.drawable.background_4};
+    private static ImageMargins[] margins = { new ImageMargins(140, 70, 0, 0), new ImageMargins(140, 70, 0, 0), new ImageMargins(500, 120, 0, 0),
+            new ImageMargins(700, 50, 0, 0), new ImageMargins(850, 20, 0, 0)};
+    private InterstitialAd mInterstitialAd;
     public static final String PREFS_NAME = "MyPrefsFile";
 
     @Override
@@ -31,11 +39,33 @@ public class GameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        //AdRequest adRequest = new AdRequest.Builder().build();
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
+                .addTestDevice("7B31159C3C89560266CB231B4759805A")
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+
+                gameOver();
+            }
+        });
+
         ViewGroup mRrootLayout = (ViewGroup) findViewById(R.id.rootView);
         final WScratchView to_erase = (WScratchView) mRrootLayout.findViewById(R.id.image_to_erase);
         background = (ImageView) mRrootLayout.findViewById(R.id.background);
         textview = (TextView) mRrootLayout.findViewById(R.id.time_missing);
-        //percentageText = (TextView) mRrootLayout.findViewById(R.id.percentage);
+
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        final int height = displaymetrics.heightPixels;
+        final int width = displaymetrics.widthPixels;
 
         // set drawable to scratchview
         to_erase.setScratchDrawable(getResources().getDrawable(R.drawable.imagem_jj));
@@ -51,7 +81,7 @@ public class GameActivity extends Activity {
             @Override
             public void onDetach(boolean fingerDetach) {
 
-                if(mPercentage == 100){
+                if(mPercentage >= 95){
                     if(next_image!=4){
                         background.setImageResource(img[next_image]);
                         next_image++;
@@ -59,22 +89,37 @@ public class GameActivity extends Activity {
                         totalPoints += 200;
 
                         to_erase.resetView();
-                        ViewGroup.LayoutParams params = to_erase.getLayoutParams();
-                        params.height += 30;
-                        params.width += 30;
+
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                                                                             RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        // used as reference my smartphones (MOTO G) dimensions width=1196 - height=720
+                        // and then I calculate a factor by which I multiple the user's screen size
+                        // so the image appear in the correct position.
+                        float y_factor = (float) ((double) height)/720;
+                        float x_factor = (float) ((double) width)/1196;
+
+                        ImageMargins next_image_margins = margins[next_image];
+
+                        params.setMargins(Math.round((next_image_margins.getLeft())*x_factor),
+                                          Math.round((next_image_margins.getTop())*y_factor),
+                                          Math.round((next_image_margins.getRight())*x_factor),
+                                          Math.round((next_image_margins.getBottom())*y_factor));
+
+                        to_erase.setLayoutParams(params);
+
 
                         to_erase.setScratchAll(false);
                         updatePercentage(0f);
 
                     }else{
-
+                        timer.cancel();
                         totalPoints = settingScore(false);
 
-                        Intent intent = new Intent(GameActivity.this, GameOverActivity.class);
-                        timer.cancel();
-                        intent.putExtra("points", totalPoints);
-                        startActivity(intent);
-                        finish();
+                        if (mInterstitialAd.isLoaded()) {
+                            mInterstitialAd.show();
+                        } else {
+                            gameOver();
+                        }
                     }
 
                 }
@@ -120,11 +165,12 @@ public class GameActivity extends Activity {
 
                 totalPoints = settingScore(true);
 
-                Intent intent = new Intent(GameActivity.this, GameOverActivity.class);
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
 
-                intent.putExtra("points", totalPoints);
-                startActivity(intent);
-                finish();
+                    gameOver();
+                }
             }
         };
     }
@@ -135,6 +181,13 @@ public class GameActivity extends Activity {
         //percentageText.setText("" + percentage2decimal);
     }
 
+
+    private void gameOver(){
+        Intent intent = new Intent(GameActivity.this, GameOverActivity.class);
+        intent.putExtra("points", totalPoints);
+        startActivity(intent);
+        finish();
+    }
 
     @Override
     public void onBackPressed() {
