@@ -5,17 +5,26 @@
     android:layout_height="match_parent"
     android:background="#ff0000">
 
+    <!-- sign-in button -->
     <Button
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:background="@drawable/button_state"
+        android:id="@+id/sign_in_button"
+        android:layout_width="110dp"
+        android:layout_height="45dp"
+        android:background="@drawable/sign_in"
         android:textColor="#000000"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="@string/title_activity_highscore"
-        android:id="@+id/button_highscore"
-        android:layout_centerInParent="true"/>
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
+    <!-- sign-out button -->
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="110dp"
+        android:layout_height="45dp"
+        android:background="@drawable/sign_out"
+        android:textColor="#000000"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="300dp"
@@ -26,9 +35,48 @@
         android:text="@string/novo_jogo"
         android:textStyle="bold"
         android:id="@+id/button_new_game"
-        android:layout_above="@id/button_highscore"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp" />
+        android:layout_marginTop="80dp" />
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="@drawable/button_state"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="@string/title_activity_highscore"
+        android:id="@+id/button_highscore"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/button_new_game"/>
+
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="@drawable/button_state"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="@string/title_achievements"
+        android:id="@+id/button_achievements"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/button_highscore"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="@drawable/button_state"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="@string/title_leaderboard"
+        android:id="@+id/button_leaderboard"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/button_achievements"
+        android:layout_marginTop="20dp"/>
 
     <Button
         android:layout_width="300dp"
@@ -40,8 +88,8 @@
         android:text="@string/title_activity_credits"
         android:id="@+id/button_creditos"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/button_highscore"
-        android:layout_marginTop="40dp"/>
+        android:layout_below="@+id/button_leaderboard"
+        android:layout_marginTop="20dp"/>
 
 
     <com.google.android.gms.ads.AdView

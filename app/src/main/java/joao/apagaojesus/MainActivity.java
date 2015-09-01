@@ -10,10 +10,22 @@ import android.widget.Button;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.Games;
+import com.google.android.gms.plus.Plus;
+import com.google.example.games.basegameutils.BaseGameUtils;
 
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-
+    private static int RC_SIGN_IN = 9001;
+    private GoogleApiClient mGoogleApiClient;
+    private boolean mExplicitSignOut = false;
+    private boolean mInSignInFlow = false; // set to true when you're in the middle of sign in flow, to know you should not attempt to connect in onStart()
+    private boolean mResolvingConnectionFailure = false;
+    private boolean mAutoStartSignInFlow = true;
+    private boolean mSignInClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +40,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .build();
         mAdView.loadAd(adRequest);
 
+        findViewById(R.id.sign_in_button).setOnClickListener(this);
+        findViewById(R.id.sign_out_button).setOnClickListener(this);
         Button new_game = (Button) findViewById(R.id.button_new_game);
         Button highscore = (Button) findViewById(R.id.button_highscore);
         Button credits = (Button) findViewById(R.id.button_creditos);
+        Button achievements = (Button) findViewById(R.id.button_achievements);
+        Button leaderboard = (Button) findViewById(R.id.button_leaderboard);
 
         new_game.setOnClickListener(this);
         highscore.setOnClickListener(this);
         credits.setOnClickListener(this);
+        achievements.setOnClickListener(this);
+        leaderboard.setOnClickListener(this);
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                .build();
 
     }
 
@@ -57,6 +82,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.button_creditos:  intent = new Intent(MainActivity.this, CreditsActivity.class);
                                         startActivity(intent);
+
+                                        break;
+
+            case R.id.button_achievements:  intent = Games.Achievements.getAchievementsIntent(mGoogleApiClient);
+                                            startActivityForResult(intent, 1);
+
+                                            break;
+
+            case R.id.button_leaderboard:   startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
+                                                                    getResources().getString(R.string.leaderboard_id)), 1);
+                                            break;
+
+            case R.id.sign_in_button:   mSignInClicked = true;
+                                        mGoogleApiClient.connect();
+
+                                        break;
+
+            case R.id.sign_out_button:
+                                        //Games.signOut(mGoogleApiClient);
+
+                                        // user explicitly signed out, so turn off auto sign in
+                                        mExplicitSignOut = true;
+                                        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                                            mSignInClicked = false;
+                                            Games.signOut(mGoogleApiClient);
+                                            mGoogleApiClient.disconnect();
+                                        }
+
+                                        // show sign-in button, hide the sign-out button
+                                        findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+                                        findViewById(R.id.sign_out_button).setVisibility(View.GONE);
 
                                         break;
         }
@@ -88,5 +144,84 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         alertDialog.show();
 
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!mInSignInFlow && !mExplicitSignOut) {
+            // auto sign in
+            mGoogleApiClient.connect();
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        // show sign-out button, hide the sign-in button
+        findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+        findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
+
+        // (your code here: update UI, enable functionality that depends on sign in, etc)
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        // Attempt to reconnect
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        if (mResolvingConnectionFailure) {
+            // Already resolving
+            return;
+        }
+
+        // If the sign in button was clicked or if auto sign-in is enabled,
+        // launch the sign-in flow
+        if (mSignInClicked || mAutoStartSignInFlow) {
+            mAutoStartSignInFlow = false;
+            mSignInClicked = false;
+            mResolvingConnectionFailure = true;
+
+            // Attempt to resolve the connection failure using BaseGameUtils.
+            // The R.string.signin_other_error value should reference a generic
+            // error string in your strings.xml file, such as "There was
+            // an issue with sign in, please try again later."
+            if (!BaseGameUtils.resolveConnectionFailure(this,
+                    mGoogleApiClient, connectionResult,
+                    RC_SIGN_IN, getResources().getString(R.string.signin_other_error))) {
+                mResolvingConnectionFailure = false;
+            }
+        }
+
+        findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+        findViewById(R.id.sign_out_button).setVisibility(View.GONE);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent intent) {
+        if (requestCode == RC_SIGN_IN) {
+            mSignInClicked = false;
+            mResolvingConnectionFailure = false;
+            if (resultCode == RESULT_OK) {
+                mGoogleApiClient.connect();
+            } else {
+                // Bring up an error dialog to alert the user that sign-in
+                // failed. The R.string.signin_failure should reference an error
+                // string in your strings.xml file that tells the user they
+                // could not be signed in, such as "Unable to sign in."
+                BaseGameUtils.showActivityResultError(this,
+                        requestCode, resultCode, R.string.signin_failure);
+            }
+        }
     }
 }

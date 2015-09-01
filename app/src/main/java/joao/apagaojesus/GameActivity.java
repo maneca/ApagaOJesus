@@ -27,6 +27,7 @@ public class GameActivity extends Activity {
     private long secondsMissing = 0;
     private CountDownTimer timer;
     private int next_image = 0;
+
     private TextView textview, percentageText;
     private static int[] img = {R.drawable.background_1, R.drawable.background_2, R.drawable.background_3, R.drawable.background_4};
     private static ImageMargins[] margins = { new ImageMargins(140, 70, 0, 0), new ImageMargins(140, 70, 0, 0), new ImageMargins(500, 120, 0, 0),
@@ -39,6 +40,8 @@ public class GameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+
+        // CREATE THE ADD REQUEST, THAT WILL BE SHOWN IN THE END OF THE GAME.
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         //AdRequest adRequest = new AdRequest.Builder().build();
@@ -56,6 +59,7 @@ public class GameActivity extends Activity {
                 gameOver();
             }
         });
+
 
         ViewGroup mRrootLayout = (ViewGroup) findViewById(R.id.rootView);
         final WScratchView to_erase = (WScratchView) mRrootLayout.findViewById(R.id.image_to_erase);
@@ -224,6 +228,7 @@ public class GameActivity extends Activity {
 
         alertDialog.show();
     }
+
 
 
 }

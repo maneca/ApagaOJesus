@@ -6,6 +6,8 @@
     <string name="title_activity_highscore">Pontuação Máxima</string>
     <string name="title_activity_credits">Sobre</string>
     <string name="title_activity_game_over">Game Over</string>
+    <string name="title_achievements">Troféus</string>
+    <string name="title_leaderboard">Classificação</string>
     <string name="novo_jogo">Novo jogo</string>
     <string name="limpinho">Foi limpinho, limpinho.</string>
     <string name="pontos">pontos</string>
@@ -20,4 +22,26 @@
     <string name="sim">Sim</string>
     <string name="nao">Não</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+
+    <string name="signin_failure">Erro a fazer sign-in.</string>
+    <string name="signin_other_error">There was an issue with sign-in, please try again later.</string>
+
+
+    <!-- GAME ID-->
+
+    <string name="game_id">558282179176</string>
+
+    <!-- ACHIEVEMENTS -->
+
+    <string name="nova_contratacao">CgkI6ITY4Z8QEAIQAg</string>
+    <string name="equipa_B">CgkI6ITY4Z8QEAIQAw</string>
+    <string name="equipa_A">CgkI6ITY4Z8QEAIQBA</string>
+    <string name="suplente">Suplente utilizado</string>
+    <string name="titular">CgkI6ITY4Z8QEAIQBg</string>
+    <string name="estrela">CgkI6ITY4Z8QEAIQBw</string>
+
+    <!-- LEADERBOARD -->
+
+    <string name="leaderboard_id">CgkI6ITY4Z8QEAIQCA</string>
+
 </resources>
