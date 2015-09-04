@@ -1,4 +1,4 @@
-package joao.apagaojesus;
+package joao.apagaojesus.custom;
 
 /**
  * Created by Joao on 29-08-2015.

@@ -19,7 +19,7 @@
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/benfica" />
+            android:src="@drawable/background_0" />
 
 
         <com.winsontan520.WScratchView

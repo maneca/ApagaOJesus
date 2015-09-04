@@ -1,4 +1,4 @@
-package joao.apagaojesus;
+package joao.apagaojesus.custom;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -1,12 +1,16 @@
 package joao.apagaojesus;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -26,6 +30,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private boolean mResolvingConnectionFailure = false;
     private boolean mAutoStartSignInFlow = true;
     private boolean mSignInClicked = false;
+    private ConnectivityManager connManager;
+
+    private NetworkInfo mWifi, mMobile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +40,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
-        //AdRequest adRequest = new AdRequest.Builder().build();
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
-                .addTestDevice("7B31159C3C89560266CB231B4759805A")
-                .build();
+        AdRequest adRequest = new AdRequest.Builder().build();
+        //AdRequest adRequest = new AdRequest.Builder()
+        //        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
+        //        .addTestDevice("7B31159C3C89560266CB231B4759805A")
+        //        .addTestDevice("F7AEB1A79D4E502AA39818395456F2C0")
+        //        .build();
         mAdView.loadAd(adRequest);
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
@@ -54,12 +62,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         achievements.setOnClickListener(this);
         leaderboard.setOnClickListener(this);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .build();
+        connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if(mMobile.isConnected() || mWifi.isConnected()){
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
+                    .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                    .build();
+        }
 
     }
 
@@ -71,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         switch(v.getId()){
             case R.id.button_new_game:  intent = new Intent(MainActivity.this, GameActivity.class);
                                         startActivity(intent);
-                                        finish();
 
                                         break;
 
@@ -85,24 +99,37 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                                         break;
 
-            case R.id.button_achievements:  intent = Games.Achievements.getAchievementsIntent(mGoogleApiClient);
-                                            startActivityForResult(intent, 1);
+            case R.id.button_achievements:  if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                                                intent = Games.Achievements.getAchievementsIntent(mGoogleApiClient);
+                                                startActivityForResult(intent, 1);
+                                            }else{
+                                                Toast.makeText(this, getResources().getString(R.string.needs_login), Toast.LENGTH_SHORT).show();
+                                            }
 
                                             break;
 
-            case R.id.button_leaderboard:   startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
-                                                                    getResources().getString(R.string.leaderboard_id)), 1);
+            case R.id.button_leaderboard:   if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                                                startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, getResources().getString(R.string.leaderboard_id)), 1);
+                                            }else{
+                                               Toast.makeText(this, getResources().getString(R.string.needs_login), Toast.LENGTH_SHORT).show();
+                                            }
+
                                             break;
 
-            case R.id.sign_in_button:   mSignInClicked = true;
-                                        mGoogleApiClient.connect();
+            case R.id.sign_in_button:   mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                                        mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+                                        if(mWifi.isConnected() || mMobile.isConnected()){
+                                            mSignInClicked = true;
+                                            mGoogleApiClient.connect();
+                                        }else{
+                                            Toast.makeText(this, getResources().getString(R.string.needs_internet), Toast.LENGTH_LONG).show();
+                                        }
+
 
                                         break;
 
-            case R.id.sign_out_button:
-                                        //Games.signOut(mGoogleApiClient);
-
-                                        // user explicitly signed out, so turn off auto sign in
+            case R.id.sign_out_button:  // user explicitly signed out, so turn off auto sign in
                                         mExplicitSignOut = true;
                                         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
                                             mSignInClicked = false;
@@ -129,6 +156,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         alertDialog.setPositiveButton(getResources().getString(R.string.sim),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        mExplicitSignOut = true;
+                        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                            mSignInClicked = false;
+                            Games.signOut(mGoogleApiClient);
+                            mGoogleApiClient.disconnect();
+                        }
 
                         finish();
                     }
@@ -146,22 +179,29 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
-        if (!mInSignInFlow && !mExplicitSignOut) {
-            // auto sign in
-            mGoogleApiClient.connect();
+
+        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if(mMobile.isConnected() || mWifi.isConnected()){
+            if (!mInSignInFlow && !mExplicitSignOut) {
+                // auto sign in
+                mGoogleApiClient.connect();
+            }
         }
 
+
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mGoogleApiClient.disconnect();
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        if(mGoogleApiClient != null)
+//            mGoogleApiClient.disconnect();
+//    }
 
     @Override
     public void onConnected(Bundle bundle) {

@@ -9,9 +9,6 @@ import android.text.method.LinkMovementMethod;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-
 
 public class CreditsActivity extends AppCompatActivity {
 
@@ -19,14 +16,6 @@ public class CreditsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credits);
-
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        //AdRequest adRequest = new AdRequest.Builder().build();
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
-                .addTestDevice("7B31159C3C89560266CB231B4759805A")
-                .build();
-        mAdView.loadAd(adRequest);
 
         TextView ideia = (TextView) findViewById(R.id.ideia);
         TextView dev_joao = (TextView) findViewById(R.id.dev_joao);

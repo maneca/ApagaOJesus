@@ -17,18 +17,29 @@
     <string name="ask_sair_da_aplicacao">Deseja sair da aplicação?</string>
     <string name="sair_do_jogo">Sair do jogo</string>
     <string name="ask_sair_do_jogo">Deseja sair do jogo?</string>
-    <string name="botao_off">Este botão está desabilitado.</string>
+    <string name="botao_off">Este botão está desabilitado nesta janela.</string>
+    <string name="acabou">Acabou</string>
+    <string name="seconds">Segundos em falta: </string>
     <string name="reset">Reinicializar</string>
     <string name="sim">Sim</string>
     <string name="nao">Não</string>
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-
+    <string name="needs_login">É necessário fazer sign-in na sua conta Google para aceder a esta funcionalidade.</string>
+    <string name="needs_internet">É necessário ter ligação à internet para conseguir fazer sign-in.</string>
     <string name="signin_failure">Erro a fazer sign-in.</string>
-    <string name="signin_other_error">There was an issue with sign-in, please try again later.</string>
+    <string name="signin_other_error">Houve um erro a fazer sign-in. Por favor tente outra vez mais tarde.</string>
 
+
+    <!-- ADS -->
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
+
+    <string name="banner_menu_principal">ca-app-pub-8869478892859553/8368299024</string>
+    <string name="banner_final_jogo">ca-app-pub-8869478892859553/5275231826</string>
+    <string name="interstitial_final">ca-app-pub-8869478892859553/2321765426</string>
 
     <!-- GAME ID-->
 
+    <string name="game_id_debug">558282179176</string>
     <string name="game_id">558282179176</string>
 
     <!-- ACHIEVEMENTS -->
@@ -36,7 +47,7 @@
     <string name="nova_contratacao">CgkI6ITY4Z8QEAIQAg</string>
     <string name="equipa_B">CgkI6ITY4Z8QEAIQAw</string>
     <string name="equipa_A">CgkI6ITY4Z8QEAIQBA</string>
-    <string name="suplente">Suplente utilizado</string>
+    <string name="suplente">CgkI6ITY4Z8QEAIQBQ</string>
     <string name="titular">CgkI6ITY4Z8QEAIQBg</string>
     <string name="estrela">CgkI6ITY4Z8QEAIQBw</string>
 
