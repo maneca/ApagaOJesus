@@ -51,16 +51,22 @@ public class GameActivity extends Activity implements GoogleApiClient.Connection
     private boolean mSignInClicked = false;
 
     private TextView textview;
-    private static int[] img = {R.drawable.background_1, R.drawable.background_2, R.drawable.background_3, R.drawable.background_4, R.drawable.background_5};
-    private static ImageMargins[] margins = { new ImageMargins(720, 60, 0, 0),  // background_1
+    private static int[] img = {R.drawable.background_6, R.drawable.background_1, R.drawable.background_2, R.drawable.background_7, R.drawable.background_3, R.drawable.background_4, R.drawable.background_8, R.drawable.background_5};
+    private static ImageMargins[] margins = { new ImageMargins(680, 30, 0, 0),  // background_6
+                                              new ImageMargins(720, 60, 0, 0),  // background_1
                                               new ImageMargins(700, 30, 0, 0),  // background_2
+                                              new ImageMargins(700, 160, 0, 0), // background_7
                                               new ImageMargins(780, 200, 0, 0), // background_3
                                               new ImageMargins(600, 70, 0, 0),  // background_4
+                                              new ImageMargins(680, 30, 0, 0),  // background_8
                                               new ImageMargins(650, 70, 0, 0)}; // background_5
-    private static ImageSize[] sizes = {new ImageSize(450, 1150),  // background_1
+    private static ImageSize[] sizes = {new ImageSize(500, 1300),  // background_6
+                                        new ImageSize(450, 1150),  // background_1
                                         new ImageSize(500, 1300),  // background_2
+                                        new ImageSize(300, 900),   // background_7
                                         new ImageSize(170, 500),   // background_3
                                         new ImageSize(400, 1100),  // background_4
+                                        new ImageSize(500, 1300),  // background_8
                                         new ImageSize(400, 1100)}; // background_5
     private InterstitialAd mInterstitialAd;
     public static final String PREFS_NAME = "MyPrefsFile";
@@ -98,7 +104,10 @@ public class GameActivity extends Activity implements GoogleApiClient.Connection
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         NetworkInfo mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-        if(mWifi.isConnected() || mMobile.isConnected()){
+        Bundle bundle = getIntent().getExtras();
+        boolean logged = bundle.getBoolean("logged");
+
+        if(logged == true && (mWifi.isConnected() || (mMobile != null && mMobile.isConnected()))){
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)

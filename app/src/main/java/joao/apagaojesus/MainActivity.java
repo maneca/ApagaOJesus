@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-        if(mMobile.isConnected() || mWifi.isConnected()){
+        if((mMobile != null && mMobile.isConnected()) || mWifi.isConnected()){
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
@@ -85,6 +85,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         switch(v.getId()){
             case R.id.button_new_game:  intent = new Intent(MainActivity.this, GameActivity.class);
+                                        if(mGoogleApiClient != null)
+                                            intent.putExtra("logged", mGoogleApiClient.isConnected());
+                                        else intent.putExtra("logged", false);
+
                                         startActivity(intent);
 
                                         break;
@@ -119,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             case R.id.sign_in_button:   mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                                         mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-                                        if(mWifi.isConnected() || mMobile.isConnected()){
+                                        if(mWifi.isConnected() || (mMobile != null && mMobile.isConnected())){
                                             mSignInClicked = true;
                                             mGoogleApiClient.connect();
                                         }else{
@@ -186,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-        if(mMobile.isConnected() || mWifi.isConnected()){
+        if((mMobile != null && mMobile.isConnected()) || mWifi.isConnected()){
             if (!mInSignInFlow && !mExplicitSignOut) {
                 // auto sign in
                 mGoogleApiClient.connect();

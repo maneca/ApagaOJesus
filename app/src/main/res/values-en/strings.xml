@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Apaga o JJ</string>
+    <string name="acabou">Finished</string>
+    <string name="ask_sair_da_aplicacao">Do you wish to leave the application?</string>
+    <string name="ask_sair_do_jogo">Do you wish to leave the game?</string>
+    <string name="botao_off">This button is disabled in this window.</string>
+    <string name="limpinho">What a cleaning!!</string>
+    <string name="menu_principal">Main window</string>
+    <string name="nao">No</string>
+    <string name="needs_internet">You have to be connected to the internet to sign-in.</string>
+    <string name="needs_login">It is necessary to sign-in to your google account to access this functionality.</string>
+    <string name="novo_jogo">New game</string>
+    <string name="pontos">points</string>
+    <string name="reset">Reset</string>
+    <string name="sair_da_aplicacao">Leave application</string>
+    <string name="sair_do_jogo">Leave game</string>
+    <string name="seconds">Seconds missing:</string>
+    <string name="signin_failure">Error performing sign-in.</string>
+    <string name="signin_other_error">There was an issue while performing the sign-in. Please try again later.</string>
+    <string name="sim">Yes</string>
+    <string name="tentar_outra_vez">Try again</string>
+    <string name="title_achievements">Accomplishments</string>
+    <string name="title_activity_credits">About</string>
+    <string name="title_activity_game">Game</string>
+    <string name="title_activity_game_over">Game Over</string>
+    <string name="title_activity_highscore">Highscore</string>
+    <string name="title_leaderboard">Leaderboard</string>
+    <string name="action_settings">Settings</string>
+</resources>

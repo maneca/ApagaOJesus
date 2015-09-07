@@ -30,29 +30,29 @@
 
 
     <!-- ADS -->
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
 
-    <string name="banner_menu_principal">ca-app-pub-8869478892859553/8368299024</string>
-    <string name="banner_final_jogo">ca-app-pub-8869478892859553/5275231826</string>
-    <string name="interstitial_final">ca-app-pub-8869478892859553/2321765426</string>
+    <string name="banner_menu_principal" translatable="false">ca-app-pub-8869478892859553/8368299024</string>
+    <string name="banner_final_jogo" translatable="false">ca-app-pub-8869478892859553/5275231826</string>
+    <string name="interstitial_final" translatable="false">ca-app-pub-8869478892859553/2321765426</string>
 
     <!-- GAME ID-->
 
-    <string name="game_id_debug">558282179176</string>
-    <string name="game_id">558282179176</string>
+    <string name="game_id_debug" translatable="false">558282179176</string>
+    <string name="game_id" translatable="false">558282179176</string>
 
     <!-- ACHIEVEMENTS -->
 
-    <string name="nova_contratacao">CgkI6ITY4Z8QEAIQAg</string>
-    <string name="equipa_B">CgkI6ITY4Z8QEAIQAw</string>
-    <string name="equipa_A">CgkI6ITY4Z8QEAIQBA</string>
-    <string name="suplente">CgkI6ITY4Z8QEAIQBQ</string>
-    <string name="titular">CgkI6ITY4Z8QEAIQBg</string>
-    <string name="estrela">CgkI6ITY4Z8QEAIQBw</string>
+    <string name="nova_contratacao" translatable="false">CgkI6ITY4Z8QEAIQAg</string>
+    <string name="equipa_B" translatable="false">CgkI6ITY4Z8QEAIQAw</string>
+    <string name="equipa_A" translatable="false">CgkI6ITY4Z8QEAIQBA</string>
+    <string name="suplente" translatable="false">CgkI6ITY4Z8QEAIQBQ</string>
+    <string name="titular" translatable="false">CgkI6ITY4Z8QEAIQBg</string>
+    <string name="estrela" translatable="false">CgkI6ITY4Z8QEAIQBw</string>
 
     <!-- LEADERBOARD -->
 
-    <string name="leaderboard_id">CgkI6ITY4Z8QEAIQCA</string>
+    <string name="leaderboard_id" translatable="false">CgkI6ITY4Z8QEAIQCA</string>
 
 </resources>
