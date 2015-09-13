@@ -41,6 +41,7 @@ public class GameActivity extends Activity implements GoogleApiClient.Connection
     private long secondsMissing = 0;
     private CountDownTimer timer;
     private int next_image = 0;
+    private boolean logged;
 
     private static int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
@@ -105,7 +106,8 @@ public class GameActivity extends Activity implements GoogleApiClient.Connection
         NetworkInfo mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
         Bundle bundle = getIntent().getExtras();
-        boolean logged = bundle.getBoolean("logged");
+
+        logged = bundle.getBoolean("logged");
 
         if(logged == true && (mWifi.isConnected() || (mMobile != null && mMobile.isConnected()))){
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -292,6 +294,7 @@ public class GameActivity extends Activity implements GoogleApiClient.Connection
     private void gameOver(){
         Intent intent = new Intent(GameActivity.this, GameOverActivity.class);
         intent.putExtra("points", totalPoints);
+        intent.putExtra("logged", logged);
         startActivity(intent);
         finish();
     }

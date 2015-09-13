@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 public class GameOverActivity extends Activity implements View.OnClickListener{
 
+    private boolean logged;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +23,8 @@ public class GameOverActivity extends Activity implements View.OnClickListener{
         Button mainScreen = (Button) findViewById(R.id.button_main_screen);
 
         Bundle extras = getIntent().getExtras();
+
+        logged = extras.getBoolean("logged");
         int points = (int) extras.get("points");
 
         total_points.setText(points+" pontos");
@@ -36,6 +40,7 @@ public class GameOverActivity extends Activity implements View.OnClickListener{
         switch(v.getId()){
 
             case R.id.button_retry: Intent intent = new Intent(GameOverActivity.this, GameActivity.class);
+                                    intent.putExtra("logged", logged);
                                     startActivity(intent);
                                     finish();
 
